@@ -5,6 +5,17 @@
     <meta charset="{$head_charset}">
     <meta name="generator" content="Serendipity v.{$serendipityVersion}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+{if ($view == "entry" || $view == "start" || $view == "feed" || $view == "plugin" || (isset($staticpage_pagetitle) and $staticpage_pagetitle != "") || (isset($robots_index) and $robots_index == 'index'))}
+    <meta name="robots" content="index,follow">
+{else}
+    <meta name="robots" content="noindex,follow">
+{/if}
+{if ($view == "entry")}
+    <link rel="canonical" href="{$entry.rdf_ident}">
+{/if}
+{if ($view == "start")}
+    <link rel="canonical" href="{$serendipityBaseURL}">
+{/if}
     <title>{$head_title|@default:$blogTitle} {if $head_subtitle} - {$head_subtitle}{/if}</title>
     <link rel="stylesheet" type="text/css" href="{$BOOTSTRAP_PATH}/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="{$head_link_stylesheet}" />
@@ -13,16 +24,13 @@
 {if $entry_id}
     <link rel="pingback" href="{$serendipityBaseURL}comment.php?type=pingback&amp;entry_id={$entry_id}" />
 {/if}
-    <link rel="shortcut icon" href="{$serendipityBaseURL}HackerInside - 32x icon.ico" />
-
 {serendipity_hookPlugin hook="frontend_header"}
 </head>
 
-<body>
+<body{if $template_option.webfonts != 'none'} class="{$template_option.webfonts}"{/if}>
 {else}
 {serendipity_hookPlugin hook="frontend_header"}
 {/if}
-
 {if $is_raw_mode != true}
 
 <div class="lc">
@@ -44,7 +52,7 @@
     <div class="col d-lg-none">
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-light">
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
 
@@ -58,6 +66,7 @@
     {serendipity_printSidebar side="right"}
 {/if}
               </li>
+{foreach from=$navlinks item="navlink" name="sbnav"}{if $navlink.title!=""&&$navlink.href!=""}<li>{if $currpage==$navlink.href or $currpage2==$navlink.href}<span>{else}<a href="{$navlink.href}">{/if}{$navlink.title}{if $currpage==$navlink.href or $currpage2==$navlink.href}</span>{else}</a>{/if}</li>{/if}{/foreach}
             </ul>
           </div>
         </nav>
@@ -92,10 +101,9 @@ Parts of this serendipity template are by Abdussamad Abdurrazzaq and <a href="ht
 </div>
 {/if}
 
-{$raw_data}
+{if isset($raw_data)}{$raw_data}{/if}
 {serendipity_hookPlugin hook="frontend_footer"}
 {if $is_embedded != true}
-
   <script src="{$BOOTSTRAP_PATH}/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -1,19 +1,22 @@
 <!-- ENTRIES START -->
     {serendipity_hookPlugin hook="entries_header" addData="$entry_id"}
 {if $is_raw_mode == true}
-		<div class="rawmode">
+    <div class="rawmode">
 {/if}
     {foreach from=$entries item="dategroup"}
     <div class="serendipity_Entry_Date">
 
         {foreach from=$dategroup.entries item="entry"}
-			        <h3 class="serendipity_title"><a href="{$entry.link}">{$entry.title}</a></h3>
+        <h3 class="serendipity_title"><a href="{$entry.link}">{$entry.title}</a></h3>
 
-        {if $dategroup.is_sticky}
-        <h4 class="serendipity_date">{$CONST.STICKY_POSTINGS}</h3>
-        {else}
-        <h4 class="serendipity_date">{$dategroup.date|@formatTime:DATE_FORMAT_ENTRY}</h3>
-        {/if}
+        <div class="serendipity_title_flex">
+            {if $dategroup.is_sticky}
+            <h4 class="serendipity_date">{$CONST.STICKY_POSTINGS}</h4>
+            {else}
+            <h4 class="serendipity_date">{$dategroup.date|@formatTime:DATE_FORMAT_ENTRY}</h4>
+            {/if}
+            <span>{if 'is_entry_owner'|array_key_exists:$entry and $entry.is_entry_owner and not $is_preview} | <a href="{$entry.link_edit}">{$CONST.EDIT_ENTRY}</a>{/if}</span>
+        </div>
 
         <div class="serendipity_entry serendipity_entry_author_{$entry.author|@makeFilename} {if $entry.is_entry_owner}serendipity_entry_author_self{/if}">
             {if $entry.categories}

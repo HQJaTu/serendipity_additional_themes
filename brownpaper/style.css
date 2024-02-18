@@ -9,26 +9,21 @@ body {
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
     margin-bottom: unset;
     font-weight: 700;
-    /*line-height: 16px;*/
 }
 
 h1 {
-	font-size: 2.2em;
+	line-height: 1.25;
+	font-size: 2em;
 }
 h2 {
-	font-size: 1.8em;
+	line-height: 1.25;
+	font-size: 1.5em;
 }
 h3 {
-	font-size: 1.6em;
+	font-size: 1.25em;
 }
-h4 {
-	font-size: 1.4em;
-}
-h5 {
-	font-size: 1.2em;
-}
-h6 {
-	font-size: 1.0em;
+h4, h5, h6 {
+	font-size: 1em;
 }
 
 code {
@@ -195,6 +190,15 @@ a.homelink2:visited,
 
 .serendipity_title a:hover {
    color: #FF0000;
+}
+
+.serendipity_Entry_Date .serendipity_title_flex {
+   display: flex;
+}
+
+.serendipity_title_flex span {
+   margin-top: 20px;
+   padding: 5px;
 }
 
 .serendipity_entry {
@@ -529,3 +533,6 @@ background-color:#FFEAB1;
 	font-size: 10px;
 }
 
+#navbarSupportedContent .serendipity_plugin_calendar {
+	max-width: 170px;
+}

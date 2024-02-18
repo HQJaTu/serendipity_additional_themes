@@ -5,6 +5,15 @@ if (IN_serendipity !== true) {
 
 @serendipity_plugin_api::load_language(dirname(__FILE__));
 
+$serendipity['smarty']->assign(array('currpage'  => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'],
+                                     'currpage2' => $_SERVER['REQUEST_URI']));
+
+if (class_exists('serendipity_event_spamblock')) {
+    $required_fieldlist = serendipity_db_query("SELECT value FROM {$serendipity['dbPrefix']}config WHERE name LIKE '%spamblock%required_fields'", true, 'assoc');
+} elseif (class_exists('serendipity_event_commentspice')) {
+    $required_fieldlist = serendipity_db_query("SELECT value FROM {$serendipity['dbPrefix']}config WHERE name LIKE '%commentspice%required_fields'", true, 'assoc');
+}
+
 $serendipity['smarty']->assign('archiveURL', serendipity_rewriteURL(PATH_ARCHIVE));
 
 $serendipity['smarty']->assign(array(
@@ -13,6 +22,7 @@ $serendipity['smarty']->assign(array(
 	'currpage2' => $_SERVER['REQUEST_URI']
 ));
 
+$serendipity['smarty']->assign('is_templatechooser', $_SESSION['serendipityUseTemplate'] ?? null);
 
 $template_config = array(
     array(
@@ -29,11 +39,25 @@ $template_config = array(
                                  '%b %d' => '%b %d',
                                  "%b %d '%y" => "%b %d '%y")
     ),
+    array(
+        'var' => 'use_corenav',
+        'name' => 'Use global navigation?',
+        'type' => 'boolean',
+        'default' => true
+    ),
+    array(
+        'var' => 'webfonts',
+        'name' => 'Use webfonts?',
+        'type' => 'select',
+        'default' => 'none',
+    ),
 );
 
 // Collapse template options into groups.
 $template_global_config = array('navigation' => true);
-$template_loaded_config = serendipity_loadThemeOptions($template_config, $serendipity['smarty_vars']['template_option'], true);
+$template_loaded_config = serendipity_loadThemeOptions($template_config,
+	$serendipity['smarty_vars']['template_option'] ?? '',
+	true);
 serendipity_loadGlobalThemeOptions($template_config, $template_loaded_config, $template_global_config);
 
 function serendipity_plugin_api_pre_event_hook_js($event, &$bag, &$eventData, &$addData) {
@@ -57,3 +81,6 @@ function serendipity_plugin_api_pre_event_hook_css($event, &$bag, &$eventData, &
 	}
 }
 
+if ($_SESSION['serendipityUseTemplate'] ?? false) {
+    $template_loaded_config['use_corenav'] = false;
+}
