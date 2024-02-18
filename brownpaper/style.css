@@ -536,3 +536,15 @@ background-color:#FFEAB1;
 #navbarSupportedContent .serendipity_plugin_calendar {
 	max-width: 170px;
 }
+
+.searchterm {
+	font-style: italic;
+	font-weight: bold;
+}
+
+.searchterm:before {
+    content: open-quote;
+}
+.searchterm:after {
+    content: close-quote;
+}

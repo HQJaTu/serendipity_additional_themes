@@ -41,13 +41,13 @@ $template_config = array(
     ),
     array(
         'var' => 'use_corenav',
-        'name' => 'Use global navigation?',
+        'name' => BROWNPAPER_USE_CORENAV,
         'type' => 'boolean',
         'default' => true
     ),
     array(
         'var' => 'webfonts',
-        'name' => 'Use webfonts?',
+        'name' => BROWNPAPER_WEBFONTS,
         'type' => 'select',
         'default' => 'none',
     ),

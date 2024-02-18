@@ -18,7 +18,7 @@
             <span>{if 'is_entry_owner'|array_key_exists:$entry and $entry.is_entry_owner and not $is_preview} | <a href="{$entry.link_edit}">{$CONST.EDIT_ENTRY}</a>{/if}</span>
         </div>
 
-        <div class="serendipity_entry serendipity_entry_author_{$entry.author|@makeFilename} {if $entry.is_entry_owner}serendipity_entry_author_self{/if}">
+        <div class="serendipity_entry serendipity_entry_author_{$entry.author|@makeFilename} {if 'is_entry_owner'|array_key_exists:$entry and $entry.is_entry_owner}serendipity_entry_author_self{/if}">
             {if $entry.categories}
             <span class="serendipity_entryIcon">
             {foreach from=$entry.categories item="category"}
@@ -61,22 +61,23 @@
                     {/if}
                 {/if}
 
-            {if $CONST.DATA_DO_TRACKBACKS}
-                {if $entry.has_trackbacks}
-                    {if $use_popups}
-                        | <a href="{$entry.link_popup_trackbacks}" onclick="window.open(this.href, 'comments', 'width=480,height=480,scrollbars=yes'); return false;">{$entry.label_trackbacks} ({$entry.trackbacks})</a>
-                    {else}
-                        | <a href="{$entry.link}#trackbacks">{$entry.label_trackbacks} ({$entry.trackbacks})</a>
+                {if $CONST.DATA_DO_TRACKBACKS}
+                    {if $entry.has_trackbacks}
+                        {if $use_popups}
+                            | <a href="{$entry.link_popup_trackbacks}" onclick="window.open(this.href, 'comments', 'width=480,height=480,scrollbars=yes'); return false;">{$entry.label_trackbacks} ({$entry.trackbacks})</a>
+                        {else}
+                            | <a href="{$entry.link}#trackbacks">{$entry.label_trackbacks} ({$entry.trackbacks})</a>
+                        {/if}
                     {/if}
                 {/if}
-            {/if}
 
-                {if $entry.is_entry_owner and not $is_preview}
-                        | <a href="{$entry.link_edit}">{$CONST.EDIT_ENTRY}</a>
+                {if 'is_entry_owner'|array_key_exists:$entry and $entry.is_entry_owner and not $is_preview}
+                    | <a href="{$entry.link_edit}">{$CONST.EDIT_ENTRY}</a>
                 {/if}
 
-                | <a href="http://www.linkedin.com/shareArticle?mini=true&url={$serendipityBaseURL|regex_replace:";/$;":""}{$entry.link}&title={$entry.title}&source=Hacker%27s+ramblings+Blog
-" target="_blank">Share in LinkedIn</a>
+                | <a
+                    href="http://www.linkedin.com/shareArticle?mini=true&url={$serendipityBaseURL|regex_replace:";/$;":""}{$entry.link}&title={$entry.title}&source={$head_title|@default:$blogTitle}"
+				    target="_blank">Share in LinkedIn</a>
                 {$entry.add_footer}
             </div>
         </div>
@@ -143,7 +144,7 @@
                 <br />
                     {serendipity_printComments entry=$entry.id mode=$entry.viewmode}
 
-                {if $entry.is_entry_owner}
+                {if 'is_entry_owner'|array_key_exists:$entry and $entry.is_entry_owner}
                     {if $entry.allow_comments}
                     <div class="serendipity_center">(<a href="{$entry.link_deny_comments}">{$CONST.COMMENTS_DISABLE}</a>)</div>
                     {else}
@@ -187,21 +188,26 @@
         {/foreach}
     </div>
     {foreachelse}
-    {if not $plugin_clean_page}
-        {$CONST.NO_ENTRIES_TO_PRINT}
+    {if !isset($plugin_clean_page) || not $plugin_clean_page}
+	    <p>
+            {$CONST.NO_ENTRIES_TO_PRINT}
+	    </p>
+	    <p>
+            {BROWNPAPER_NO_ENTRIES_TO_PRINT}
+	    </p>
     {/if}
     {/foreach}
 
     <div class='serendipity_entryFooter' style="text-align: center">
-    {if $footer_prev_page}
+    {if isset($footer_prev_page) && $footer_prev_page}
         <a href="{$footer_prev_page}">&laquo; {$CONST.PREVIOUS_PAGE}</a>&#160;&#160;
     {/if}
 
-    {if $footer_info}
+    {if isset($footer_info) && $footer_info}
         ({$footer_info})
     {/if}
 
-    {if $footer_next_page}
+    {if isset($footer_prev_page) && $footer_next_page}
         <a href="{$footer_next_page}">&raquo; {$CONST.NEXT_PAGE}</a>
     {/if}
 
